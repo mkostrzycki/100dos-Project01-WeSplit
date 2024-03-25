@@ -14,8 +14,6 @@ struct ContentView: View {
 
     @FocusState private var amountIsFocused: Bool
 
-    let tipPercentages = [10, 15, 20, 25, 0]
-
     var totalAmount: Double {
         let tipPercentageSelection = Double(tipPercentage) / 100
         let tipValue = tipPercentageSelection * checkAmount
@@ -48,18 +46,18 @@ struct ContentView: View {
                 
                 Section("How much do you want to tip?") {
                     Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach(tipPercentages, id: \.self) {
+                        ForEach(1...100, id: \.self) {
                             Text($0, format: .percent)
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.navigationLink)
                 }
 
-                Section("Total amount including tip") {
+                Section("Total amount including \(tipPercentage)% tip") {
                     Text(totalAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 }
 
-                Section("Total amount per person including tip") {
+                Section("Amount per person including \(tipPercentage)% tip") {
                     Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 }
             }
