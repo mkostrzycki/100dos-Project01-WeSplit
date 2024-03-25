@@ -15,16 +15,21 @@ struct ContentView: View {
     @FocusState private var amountIsFocused: Bool
 
     let tipPercentages = [10, 15, 20, 25, 0]
-    
+
+    var totalAmount: Double {
+        let tipPercentageSelection = Double(tipPercentage) / 100
+        let tipValue = tipPercentageSelection * checkAmount
+
+        return checkAmount + tipValue
+    }
+
     var totalPerPerson: Double {
         let peopleCountOptionShift = 2 // option index is shifted by 2 from option value
         let peopleCount = Double(numberOfPeople + peopleCountOptionShift)
-        let tipPercentageSelection = Double(tipPercentage) / 100
-        let tipValue = tipPercentageSelection * checkAmount
-        
-        return (checkAmount + tipValue) / peopleCount
+
+        return totalAmount / peopleCount
     }
-    
+
     var body: some View {
         NavigationStack {
             Form {
@@ -49,8 +54,12 @@ struct ContentView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-                
-                Section("Total per person including tip") {
+
+                Section("Total amount including tip") {
+                    Text(totalAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                }
+
+                Section("Total amount per person including tip") {
                     Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 }
             }
